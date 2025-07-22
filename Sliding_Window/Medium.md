@@ -128,3 +128,92 @@ int main() {
 * Total: 10 + 6 = **16**
 
 
+
+
+
+## 📘 Leetcode 1695: Maximum Erasure Value
+
+### 🔗 Link:
+
+[Leetcode Problem 1695 - Maximum Erasure Value](https://leetcode.com/problems/maximum-erasure-value/)
+
+---
+
+### 📝 Problem Statement:
+
+You are given an array of positive integers `nums` and want to erase a subarray (contiguous elements) such that all elements are **unique**.
+
+Return the **maximum sum** of elements in such a subarray.
+
+---
+
+### 🔍 Example:
+
+**Input**:
+`nums = [4,2,4,5,6]`
+**Output**:
+`17`
+**Explanation**: The optimal subarray is `[2,4,5,6]`, with a sum of `2+4+5+6 = 17`.
+
+---
+
+### ✅ Constraints:
+
+* `1 <= nums.length <= 10^5`
+* `1 <= nums[i] <= 10^4`
+
+---
+
+### 🧠 Approach:
+
+We use the **sliding window technique** to maintain a window `[left, right]` that always contains **unique elements**:
+
+* Expand the window by moving `right` and add `nums[right]` to the current sum.
+* If `nums[right]` already exists in the window, shrink the window from `left` until `nums[right]` becomes unique.
+* Track the **maximum sum** of all valid windows.
+
+---
+
+### ✅ C++ Solution (with Comments):
+
+```cpp
+class Solution {
+public:
+    int maximumUniqueSubarray(vector<int>& nums) {
+        unordered_map<int, int> freq; // To track frequency of elements in the current window
+        int left = 0, curr_sum = 0, max_sum = 0;
+
+        // Traverse the array using right pointer
+        for (int right = 0; right < nums.size(); ++right) {
+            int num = nums[right];
+            freq[num]++;
+            curr_sum += num;
+
+            // If we see a duplicate, shrink the window from the left
+            while (freq[num] > 1) {
+                freq[nums[left]]--;
+                curr_sum -= nums[left];
+                left++;
+            }
+
+            // Update maximum sum with current valid window
+            max_sum = max(max_sum, curr_sum);
+        }
+
+        return max_sum;
+    }
+};
+```
+
+---
+
+### ⏱️ Time & Space Complexity:
+
+* **Time Complexity**: `O(n)`
+  Each element is inserted and removed at most once in the sliding window.
+* **Space Complexity**: `O(n)`
+  For storing frequencies of elements in the hashmap.
+
+---
+
+
